@@ -17,8 +17,8 @@ from datetime import datetime
 def index(request):
     request.session.set_test_cookie()
     category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.order_by('-views')[:5]
-    context_dict = {'categories': category_list, 'pages': page_list}
+    most_viewed_pages=Page.objects.order_by("views")[:5]
+    context_dict = {'categories': category_list,"views":most_viewed_pages}
     visitor_cookie_handler(request)
     context_dict['visits'] = request.session['visits']
     response = render(request, 'rango/index.html', context=context_dict)
@@ -28,7 +28,8 @@ def index(request):
 def about(request):
     if request.session.test_cookie_worked():
         print("TEST COOKIE WORKED!")
-        request.session.delete_test_cookie()
+        request.session.delete_test_cookie()
+
     context_dict={"boldmessage": "Hello there!,Kenobi,dog"}
     visitor_cookie_handler(request)
     context_dict['visits'] = request.session['visits']
@@ -159,10 +160,13 @@ def get_server_side_cookie(request, cookie, default_val=None):
 def visitor_cookie_handler(request):
     visits = int(get_server_side_cookie(request,'visits', '1'))
     last_visit_cookie = get_server_side_cookie(request,'last_visit',
-                                               str(datetime.now())) 
-    last_visit_time = datetime.strptime(last_visit_cookie[:-7], "%Y-%m-%d %H:%M:%S")
+                                               str(datetime.now()))
+ 
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], "%Y-%m-%d %H:%M:%S")
+
     if (datetime.now() - last_visit_time).seconds > 0:
-        visits = visits + 1
+        visits = visits + 1
+
         request.session['last_visit'] = str(datetime.now())
     else:
         visits=1
