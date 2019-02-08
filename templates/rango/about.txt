@@ -6,6 +6,7 @@
 	{% block body_block %}
 		<h1>This is the about page</h1>
 		<div>
+			<p>Your visits: {{ visits }} </p>
 			<strong>{{ boldmessage }}</strong><br />
 		</div>
 		<p> This tutorial has been put together by Callum Swan,</p>
